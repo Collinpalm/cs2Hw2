@@ -69,10 +69,81 @@ public class AddressBookTree<T extends Comparable, U> {
         this.root.setColor(0);
     }
     public void delete(T nameInput){
+        Node z = this.root;
+        while(z.getName().compareTo(nameInput) != 0 && z != null){
+            if(z.getName().compareTo(nameInput) > 0){
+                z = z.getRightkid();
+            }else{
+                z = z.getLeftkid();
+            }
+        }
+        Node y = z;
+        Node x = null;
+        int yOriginalColor = y.getColor();
+        if(z.getLeftkid() == null){
+            x = z.getRightkid();
+            rb_transplant(z, z.getRightkid());
+        }else if(z.getRightkid() == null){
+            x = z.getLeftkid();
+            rb_transplant(z, z.getLeftkid());
+        }else{
+            while(y.getRightkid() != null)
+            yOriginalColor = y.getColor();
 
+        }
     }
-    public void delete_fix(Node<T,U> node){
-
+    public void delete_fix(Node<T,U> x){
+        Node w = null;
+        while(x != this.root && x.getColor() == 0){
+            if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+                w = x.getParent().getRightkid();
+                if(w.getColor() == 1){
+                    w.setColor(0);
+                    x.getParent().setColor(1);
+                    rotationLeft(x.getParent());
+                }
+                if(w.getLeftkid().getColor() == 0 && w.getRightkid().getColor() == 0){
+                    w.setColor(1);
+                    x = x.getParent();
+                }else{
+                    if(w.getRightkid().getColor() == 0) {
+                        w.getLeftkid().setColor(0);
+                        w.setColor(1);
+                        rotationRight(w);
+                        w = x.getParent().getRightkid();
+                    }
+                    w.setColor(x.getParent().getColor());
+                    x.getParent().setColor(0);
+                    w.getRightkid().setColor(0);
+                    rotationLeft(x.getParent());
+                    x = this.root;
+                }
+            }else{
+                    w = x.getParent().getLeftkid();
+                    if(w.getColor() == 1){
+                        w.setColor(0);
+                        x.getParent().setColor(1);
+                        rotationRight(x.getParent());
+                    }
+                    if(w.getLeftkid().getColor() == 0 && w.getRightkid().getColor() == 0){
+                        w.setColor(1);
+                        x = x.getParent();
+                    }else{
+                        if(w.getLeftkid().getColor() == 0) {
+                            w.getRightkid().setColor(0);
+                            w.setColor(1);
+                            rotationLeft(w);
+                            w = x.getParent().getLeftkid();
+                        }
+                        w.setColor(x.getParent().getColor());
+                        x.getParent().setColor(0);
+                        w.getLeftkid().setColor(0);
+                        rotationRight(x.getParent());
+                        x = this.root;
+                }
+            }
+        }
+        x.setColor(0);
     }
     public void rotationLeft(Node<T,U> node){
 
