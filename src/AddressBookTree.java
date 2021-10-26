@@ -1,8 +1,6 @@
 public class AddressBookTree<T extends Comparable, U> {
     private Node root;
-    public AddressBookTree(){
-        root = new Node();
-    }
+    public AddressBookTree(){root = new Node();}
     public void insert(T nameInput, U officeInput) {
         Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
         Node posRoot = this.root;
@@ -34,7 +32,7 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     public void insert_fix(Node node){
         while(node.getParent().getColor() == 1){
-            if(node.getParent().getName() == node.getParent().getParent().getLeftkid().getName()){
+            if((node.getParent().getName().compareTo(node.getParent().getParent().getLeftkid().getName()))== 0){
                 Node y = node.getParent().getParent().getRightkid();
                 if(y.getColor() == 1){
                     node.getParent().setColor(0);
@@ -42,7 +40,7 @@ public class AddressBookTree<T extends Comparable, U> {
                     node.getParent().getParent().setColor(1);
                     node = node.getParent().getParent();
                 }else{
-                    if(node.getName() == node.getParent().getRightkid()) {
+                    if((node.getParent().getRightkid().getName().compareTo(node.getName()))== 0) {
                         node = node.getParent();
                         rotationLeft(node);
                     }
@@ -73,17 +71,24 @@ public class AddressBookTree<T extends Comparable, U> {
     public void delete(T nameInput){
 
     }
-    public void delete_fix(Node<T,U> selectedNode){
+    public void delete_fix(Node<T,U> node){
 
     }
-    public void rotationLeft(Node<T,U> selectedNode){
+    public void rotationLeft(Node<T,U> node){
 
     }
-    public void rotationRight(Node<T,U> selectedNode){
+    public void rotationRight(Node<T,U> node){
 
     }
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
-
+        if(nodeOne == null){
+            this.root = nodeTwo;
+        }else if(nodeOne.getName().compareTo(nodeOne.getParent().getLeftkid().getName()) == 0){
+            nodeOne.getParent().setLeftkid(nodeTwo);
+        }else{
+            nodeOne.getParent().setRightkid(nodeTwo);
+        }
+        nodeTwo.setParent(nodeOne.getParent());
     }
     public void display(){
 
