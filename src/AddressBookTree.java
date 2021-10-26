@@ -10,12 +10,17 @@ public class AddressBookTree<T extends Comparable, U> {
             root = newKidOnTheBlock;
             return;
         }
-        while(!posRoot.missingKids()){
-
-            if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0 ){
-                posRoot = posRoot.getRightkid();
+        while(!posRoot.hasNoKids()){
+            if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0){
+                if(posRoot.getRightkid() != null)
+                    posRoot = posRoot.getRightkid();
+                else
+                    break;
             }else {
-                posRoot = posRoot.getLeftkid();
+                if(posRoot.getLeftkid() != null)
+                    posRoot = posRoot.getLeftkid();
+                else
+                    break;
             }
         }
         newKidOnTheBlock.setParent(posRoot);
@@ -24,9 +29,10 @@ public class AddressBookTree<T extends Comparable, U> {
         }else {
             posRoot.setLeftkid(newKidOnTheBlock);
         }
-
+        newKidOnTheBlock.setColor(1);
+        insert_fix(newKidOnTheBlock);
     }
-    public void insert_fix(T nameInput, U officeInput){
+    public void insert_fix(Node node){
 
     }
     public void delete(T nameInput){
