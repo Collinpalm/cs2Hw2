@@ -145,11 +145,39 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         x.setColor(0);
     }
-    public void rotationLeft(Node<T,U> node){
-
+    public void rotationLeft(Node<T,U> x){
+        Node y = x;
+        x.setRightkid(y.getLeftkid());
+        if(y.getLeftkid() == null){
+            y.getLeftkid().setParent(x);
+        }
+        y.setParent(x.getParent());
+        if(x.getParent() == null){
+            this.root = y;
+        }else if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+            x.getParent().setLeftkid(y);
+        }else{
+            x.getParent().setRightkid(y);
+        }
+        y.setLeftkid(x);
+        x.setParent(y);
     }
-    public void rotationRight(Node<T,U> node){
-
+    public void rotationRight(Node<T,U> x){
+        Node y = x;
+        x.setRightkid(y.getLeftkid());
+        if(y.getLeftkid() == null){
+            y.getLeftkid().setParent(x);
+        }
+        y.setParent(x.getParent());
+        if(x.getParent() == null){
+            this.root = y;
+        }else if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+            x.getParent().setLeftkid(y);
+        }else{
+            x.getParent().setRightkid(y);
+        }
+        y.setLeftkid(x);
+        x.setParent(y);
     }
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
         if(nodeOne == null){
