@@ -33,7 +33,42 @@ public class AddressBookTree<T extends Comparable, U> {
         insert_fix(newKidOnTheBlock);
     }
     public void insert_fix(Node node){
-
+        while(node.getParent().getColor() == 1){
+            if(node.getParent().getName() == node.getParent().getParent().getLeftkid().getName()){
+                Node y = node.getParent().getParent().getRightkid();
+                if(y.getColor() == 1){
+                    node.getParent().setColor(0);
+                    y.setColor(0);
+                    node.getParent().getParent().setColor(1);
+                    node = node.getParent().getParent();
+                }else{
+                    if(node.getName() == node.getParent().getRightkid()) {
+                        node = node.getParent();
+                        rotationLeft(node);
+                    }
+                    node.getParent().setColor(0);
+                    node.getParent().getParent().setColor(1);
+                    rotationRight(node.getParent().getParent());
+                }
+            }else{
+                Node y = node.getParent().getParent().getLeftkid();
+                if(y.getColor() == 1){
+                    node.getParent().setColor(0);
+                    y.setColor(0);
+                    node.getParent().getParent().setColor(1);
+                    node = node.getParent().getParent();
+                }else{
+                    if(node.getName() == node.getParent().getLeftkid()) {
+                        node = node.getParent();
+                        rotationRight(node);
+                    }
+                    node.getParent().setColor(0);
+                    node.getParent().getParent().setColor(1);
+                    rotationLeft(node.getParent().getParent());
+                }
+            }
+        }
+        this.root.setColor(0);
     }
     public void delete(T nameInput){
 
@@ -41,7 +76,10 @@ public class AddressBookTree<T extends Comparable, U> {
     public void delete_fix(Node<T,U> selectedNode){
 
     }
-    public void rotations(Node<T,U> selectedNode){
+    public void rotationLeft(Node<T,U> selectedNode){
+
+    }
+    public void rotationRight(Node<T,U> selectedNode){
 
     }
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
