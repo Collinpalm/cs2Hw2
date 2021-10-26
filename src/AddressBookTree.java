@@ -4,11 +4,27 @@ public class AddressBookTree<T extends Comparable, U> {
         root = new Node();
     }
     public void insert(T nameInput, U officeInput) {
-        if (root == null){
-            root = new Node(nameInput, officeInput, null, null, null, 0);
-        }else{
-            Node newNode = new Node(nameInput, officeInput, null, null, null, 0);
+        Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
+        Node posRoot = this.root;
+        if(posRoot == null){
+            root = newKidOnTheBlock;
+            return;
         }
+        while(!posRoot.missingKids()){
+
+            if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0 ){
+                posRoot = posRoot.getRightkid();
+            }else {
+                posRoot = posRoot.getLeftkid();
+            }
+        }
+        newKidOnTheBlock.setParent(posRoot);
+        if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0 ){
+            posRoot.setRightkid(newKidOnTheBlock);
+        }else {
+            posRoot.setLeftkid(newKidOnTheBlock);
+        }
+
     }
     public void insert_fix(T nameInput, U officeInput){
 
@@ -27,35 +43,6 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     public void display(){
 
-    }
-    public boolean searchForInsert(Node input, Node<T, U> root){
-        if(root.hasNoKids()){
-            if((root.getName().compareTo(input.getName()))> 0 ){
-                root.setRightkid(input);
-                input.setParent(root);
-                return true;
-            }
-            root.setLeftkid(input);
-            input.setParent(root);
-            return true;
-        }
-        if((root.getName().compareTo(input.getName()))> 0){
-            if(root.getRightkid() == null){
-                root.setRightkid(input);
-                input.setParent(root);
-                return true;
-            }
-            return searchForInsert(input, root.getRightkid());
-        }
-        if((root.getName().compareTo(input.getName()))< 0){
-            if(root.getLeftkid() == null){
-                root.setLeftkid(input);
-                input.setParent(root);
-                return true;
-            }
-            return searchForInsert(input, root.getLeftkid());
-        }
-        return false;
     }
     //recursively travers the tree and count the black nodes
     public int countBlack(Node<T,U> selectedRoot){
@@ -113,7 +100,7 @@ public class AddressBookTree<T extends Comparable, U> {
 
 
 //Node class
-class Node<T, U> {
+class Node<T extends Comparable, U> {
     //variable names... pretty self-explanatory
     private T name;
     private U office;
@@ -143,6 +130,17 @@ class Node<T, U> {
     //RETURNS: boolean true if node has no children, otherwise false
     public boolean hasNoKids(){
         if(this.leftkid == null && this.rightkid == null){
+            return true;
+        }
+        return false;
+    }
+    public String checkKids(){
+        if(this.leftkid == null)
+            return "left";
+        return "right";
+    }
+    public boolean missingKids(){
+        if(this.leftkid == null || this.rightkid == null){
             return true;
         }
         return false;
