@@ -1,6 +1,6 @@
 package addressbook;
 
-public class AddressBookTree<T extends Comparable, U> {
+public class AddressBookTree<T extends Comparable<T>, U> {
     //saves the root of the tree
     //cannot be accessed directly to avoid
     //idiots trying to do something stupid
@@ -13,82 +13,81 @@ public class AddressBookTree<T extends Comparable, U> {
     //insert method from the pseudo code from professor Steinburg
     //if it doesnt work its his fault
     public void insert(T nameInput, U officeInput) {
-        Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
-
-        if(this.root.getName() == null){
-            root = newKidOnTheBlock;
-            return;
-        }
-        Node posRoot = this.root;
-        while(!posRoot.hasNoKids()){
-            if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0){
-                if(posRoot.getRightkid() != null)
-                    posRoot = posRoot.getRightkid();
-                else
-                    break;
-            }else {
-                if(posRoot.getLeftkid() != null)
-                    posRoot = posRoot.getLeftkid();
-                else
-                    break;
+        Node z = new Node(nameInput, officeInput, null, null, null, 0);
+            Node x = root;
+            Node y = null;
+            while (x != null) {
+                y = x;
+                if (x.getName() != null || z.getName().compareTo(x.getName()) < 0) {
+                    x = x.getRightkid();
+                } else {
+                    x = x.getLeftkid();
+                }
             }
-        }
-        newKidOnTheBlock.setParent(posRoot);
-        if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0 ){
-            posRoot.setRightkid(newKidOnTheBlock);
-        }else {
-            posRoot.setLeftkid(newKidOnTheBlock);
-        }
-        newKidOnTheBlock.setColor(1);
-        if(newKidOnTheBlock.getParent().getParent() != null) {
-            insert_fix(newKidOnTheBlock);
-        }
+            z.setParent(y);
+            if(z.getParent() != null) {
+                T yname = (T) y.getName();
+                T zname = (T) z.getName();
+                if ((yname).compareTo(zname) < 0) {
+                    y.setRightkid(z);
+                } else {
+                    y.setLeftkid(z);
+                }
+            }
+            z.setLeftkid(null);
+            z.setRightkid(null);
+            z.setColor(1);
+            if(z.getParent() != null || z.getParent().getParent() != null ||z.getParent().getParent().getRightkid() != null || z.getParent().getParent().getLeftkid() != null){}
+                //insert_fix(z);
+
+
     }
     //fixing the insert, also from professor Steinburg's pseudo code
     //again, his fault if it doesnt work
-    public void insert_fix(Node node){
-        while(node.getParent().getColor() == 1){
-            if((node.getParent().getName().compareTo(node.getParent().getParent().getLeftkid().getName()))== 0){
-                Node y = node.getParent().getParent().getRightkid();
-                if(y.getColor() == 1){
-                    node.getParent().setColor(0);
-                    y.setColor(0);
-                    node.getParent().getParent().setColor(1);
-                    node = node.getParent().getParent();
-                }else{
-                    if((node.getParent().getRightkid().getName().compareTo(node.getName()))== 0) {
-                        node = node.getParent();
-                        rotationLeft(node);
-                    }
-                    node.getParent().setColor(0);
-                    node.getParent().getParent().setColor(1);
-                    rotationRight(node.getParent().getParent());
-                }
-            }else{
-                Node y = node.getParent().getParent().getLeftkid();
-                if(y.getColor() == 1){
-                    node.getParent().setColor(0);
-                    y.setColor(0);
-                    node.getParent().getParent().setColor(1);
-                    node = node.getParent().getParent();
-                }else{
-                    if(node.getName() == node.getParent().getLeftkid()) {
-                        node = node.getParent();
-                        rotationRight(node);
-                    }
-                    node.getParent().setColor(0);
-                    node.getParent().getParent().setColor(1);
-                    rotationLeft(node.getParent().getParent());
-                }
-            }
-        }
-        this.root.setColor(0);
+    public void insert_fix(Node z){
+        System.out.println(z.getParent().getColor());
+       while(z.getParent().getColor() == 1){
+           if(z.getParent().getName().compareTo(z.getParent().getParent().getLeftkid().getName()) ==0){
+               Node y = z.getParent().getParent().getRightkid();
+               System.out.println(y.getColor());
+               if(y.getColor() == 1){
+                   z.getParent().setColor(0);
+                   y.setColor(0);
+                   z.getParent().getParent().setColor(1);
+                   z = z.getParent().getParent();
+               }else{
+                   if(z.getName().compareTo(z.getParent().getRightkid().getName()) == 0) {
+                        z = z.getParent();
+                        rotationLeft(z);
+                   }
+                   z.getParent().setColor(0);
+                   z.getParent().getParent().setColor(1);
+                   rotationRight(z.getParent().getParent());
+               }
+           }else{
+               Node y = z.getParent().getParent().getLeftkid();
+               if(y.getColor() == 1){
+                   z.getParent().setColor(0);
+                   y.setColor(0);
+                   z.getParent().getParent().setColor(1);
+                   z = z.getParent().getParent();
+               }else{
+                   if(z.getName().compareTo(z.getParent().getLeftkid().getName()) == 0) {
+                       z = z.getParent();
+                       rotationRight(z);
+                   }
+                   z.getParent().setColor(0);
+                   z.getParent().getParent().setColor(1);
+                   rotationLeft(z.getParent().getParent());
+               }
+           }
+       }
     }
     //delete method also from the pseudocode
     //I think I understand the pseudocode, I could be very wrong
     public void deleteNode(T nameInput){
         Node z = this.root;
-        while(z.getName().compareTo(nameInput) != 0 && z != null){
+        while(z.getName().compareTo(nameInput) != 0 && (z.getLeftkid() != null || z.getRightkid() != null)){
             if(z.getName().compareTo(nameInput) > 0){
                 z = z.getRightkid();
             }else{
@@ -136,8 +135,8 @@ public class AddressBookTree<T extends Comparable, U> {
     //again pseudocode
     public void delete_fix(Node<T,U> x){
         Node w = null;
-        while(x.getName().compareTo(this.root.getName())==0 && x.getColor() == 0){
-            if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+        while(x.getName().compareTo((T)this.root.getName())==0 && x.getColor() == 0){
+            if(x.getName().compareTo((T)x.getParent().getLeftkid().getName()) == 0){
                 w = x.getParent().getRightkid();
                 if(w.getColor() == 1){
                     w.setColor(0);
@@ -192,13 +191,13 @@ public class AddressBookTree<T extends Comparable, U> {
     public void rotationLeft(Node<T,U> x){
         Node y = x;
         x.setRightkid(y.getLeftkid());
-        if(y.getLeftkid() == null){
+        if(y.getLeftkid() != null){
             y.getLeftkid().setParent(x);
         }
         y.setParent(x.getParent());
         if(x.getParent() == null){
             this.root = y;
-        }else if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+        }else if(x.getName().compareTo((T)x.getParent().getLeftkid().getName()) == 0){
             x.getParent().setLeftkid(y);
         }else{
             x.getParent().setRightkid(y);
@@ -218,7 +217,7 @@ public class AddressBookTree<T extends Comparable, U> {
         y.setParent(x.getParent());
         if(x.getParent() == null){
             this.root = y;
-        }else if(x.getName().compareTo(x.getParent().getRightkid().getName()) == 0){
+        }else if(x.getName().compareTo((T)x.getParent().getRightkid().getName()) == 0){
             x.getParent().setRightkid(y);
         }else{
             x.getParent().setLeftkid(y);
@@ -230,7 +229,7 @@ public class AddressBookTree<T extends Comparable, U> {
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
         if(nodeOne == null){
             this.root = nodeTwo;
-        }else if(nodeOne.getName().compareTo(nodeOne.getParent().getLeftkid().getName()) == 0){
+        }else if(nodeOne.getName().compareTo((T)nodeOne.getParent().getLeftkid().getName()) == 0){
             nodeOne.getParent().setLeftkid(nodeTwo);
         }else{
             nodeOne.getParent().setRightkid(nodeTwo);
@@ -241,13 +240,12 @@ public class AddressBookTree<T extends Comparable, U> {
     public void display(){displayRecurse(this.root);}
     //method to recursivly print out the inorder traversal
     public void displayRecurse(Node <T, U> root){
-        if(root.getLeftkid() != null){
-            displayRecurse(root.getLeftkid());
+        if(root == null){
+            return;
         }
+        displayRecurse(root.getLeftkid());
         System.out.println(root.getName() + " - " + root.getOffice());
-        if(root.getRightkid() != null){
-            displayRecurse(root.getRightkid());
-        }
+        displayRecurse(root.getRightkid());
     }
     //recursively travers the tree and count the black nodes
     public int countBlack(Node<T,U> selectedRoot){
@@ -305,7 +303,7 @@ public class AddressBookTree<T extends Comparable, U> {
 
 
 //addressbook.Node class
-class Node<T extends Comparable, U> {
+class Node<T extends Comparable<T>, U> {
     //variable names... pretty self-explanatory
     private T name;
     private U office;
@@ -335,6 +333,8 @@ class Node<T extends Comparable, U> {
     //class to check if the node has any children, not necessary but will cut down the
     //number of lines of code I will have to write, just quality of life things
     //RETURNS: boolean true if node has no children, otherwise false
+
+    //OK im an idiot and this doesnt work for some reason that I dont entirely understand
     public boolean hasNoKids(){
         if(this.leftkid == null && this.rightkid == null){
             return true;
