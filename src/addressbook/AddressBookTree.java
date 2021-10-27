@@ -1,3 +1,5 @@
+package addressbook;
+
 public class AddressBookTree<T extends Comparable, U> {
     //saves the root of the tree
     //cannot be accessed directly to avoid
@@ -5,6 +7,9 @@ public class AddressBookTree<T extends Comparable, U> {
     private Node root;
     //constructor that creates a null node as the root
     public AddressBookTree(){root = new Node();}
+    public Node getRoot(){
+        return this.root;
+    }
     //insert method from the pseudo code from professor Steinburg
     //if it doesnt work its his fault
     public void insert(T nameInput, U officeInput) {
@@ -296,7 +301,7 @@ public class AddressBookTree<T extends Comparable, U> {
 
 
 
-//Node class
+//addressbook.Node class
 class Node<T extends Comparable, U> {
     //variable names... pretty self-explanatory
     private T name;
