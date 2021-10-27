@@ -208,9 +208,17 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         nodeTwo.setParent(nodeOne.getParent());
     }
-    //prints tree out in traversal order
-    public void display(){
-
+    //calls the recusive function bc thats better
+    public void display(){displayRecurse(this.root);}
+    //method to recursivly print out the inorder traversal
+    public void displayRecurse(Node <T, U> root){
+        if(root.getLeftkid() != null){
+            displayRecurse(root.getLeftkid());
+        }
+        System.out.println(root.getName() + " - " + root.getOffice());
+        if(root.getRightkid() != null){
+            displayRecurse(root.getRightkid());
+        }
     }
     //recursively travers the tree and count the black nodes
     public int countBlack(Node<T,U> selectedRoot){
