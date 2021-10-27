@@ -40,7 +40,9 @@ public class AddressBookTree<T extends Comparable, U> {
             posRoot.setLeftkid(newKidOnTheBlock);
         }
         newKidOnTheBlock.setColor(1);
-        insert_fix(newKidOnTheBlock);
+        if(newKidOnTheBlock.getParent().getParent() != null) {
+            insert_fix(newKidOnTheBlock);
+        }
     }
     //fixing the insert, also from professor Steinburg's pseudo code
     //again, his fault if it doesnt work
