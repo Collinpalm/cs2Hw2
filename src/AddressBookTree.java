@@ -282,17 +282,6 @@ class Node<T extends Comparable, U> {
         }
         return false;
     }
-    public String checkKids(){
-        if(this.leftkid == null)
-            return "left";
-        return "right";
-    }
-    public boolean missingKids(){
-        if(this.leftkid == null || this.rightkid == null){
-            return true;
-        }
-        return false;
-    }
     //getter methods
     public int getColor() {
         return color;
