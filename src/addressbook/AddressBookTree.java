@@ -83,7 +83,7 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     //delete method also from the pseudocode
     //I think I understand the pseudocode, I could be very wrong
-    public void delete(T nameInput){
+    public void deleteNode(T nameInput){
         Node z = this.root;
         while(z.getName().compareTo(nameInput) != 0 && z != null){
             if(z.getName().compareTo(nameInput) > 0){
