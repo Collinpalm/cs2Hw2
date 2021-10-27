@@ -164,19 +164,19 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     public void rotationRight(Node<T,U> x){
         Node y = x;
-        x.setRightkid(y.getLeftkid());
-        if(y.getLeftkid() == null){
-            y.getLeftkid().setParent(x);
+        x.setLeftkid(y.getRightkid());
+        if(y.getRightkid() == null){
+            y.getRightkid().setParent(x);
         }
         y.setParent(x.getParent());
         if(x.getParent() == null){
             this.root = y;
-        }else if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
-            x.getParent().setLeftkid(y);
-        }else{
+        }else if(x.getName().compareTo(x.getParent().getRightkid().getName()) == 0){
             x.getParent().setRightkid(y);
+        }else{
+            x.getParent().setLeftkid(y);
         }
-        y.setLeftkid(x);
+        y.setRightkid(x);
         x.setParent(y);
     }
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
