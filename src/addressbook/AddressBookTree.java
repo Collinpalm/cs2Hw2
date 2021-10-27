@@ -15,7 +15,7 @@ public class AddressBookTree<T extends Comparable, U> {
     public void insert(T nameInput, U officeInput) {
         Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
 
-        if(this.root == null){
+        if(this.root.getName() == null){
             root = newKidOnTheBlock;
             return;
         }
@@ -134,7 +134,7 @@ public class AddressBookTree<T extends Comparable, U> {
     //again pseudocode
     public void delete_fix(Node<T,U> x){
         Node w = null;
-        while(x != this.root && x.getColor() == 0){
+        while(x.getName().compareTo(this.root.getName())==0 && x.getColor() == 0){
             if(x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
                 w = x.getParent().getRightkid();
                 if(w.getColor() == 1){
