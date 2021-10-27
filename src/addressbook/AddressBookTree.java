@@ -14,11 +14,12 @@ public class AddressBookTree<T extends Comparable, U> {
     //if it doesnt work its his fault
     public void insert(T nameInput, U officeInput) {
         Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
-        Node posRoot = this.root;
-        if(posRoot == null){
+
+        if(this.root == null){
             root = newKidOnTheBlock;
             return;
         }
+        Node posRoot = this.root;
         while(!posRoot.hasNoKids()){
             if((posRoot.getName().compareTo(newKidOnTheBlock.getName()))> 0){
                 if(posRoot.getRightkid() != null)
