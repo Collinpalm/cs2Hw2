@@ -1,6 +1,12 @@
 public class AddressBookTree<T extends Comparable, U> {
+    //saves the root of the tree
+    //cannot be accessed directly to avoid
+    //idiots trying to do something stupid
     private Node root;
+    //constructor that creates a null node as the root
     public AddressBookTree(){root = new Node();}
+    //insert method from the pseudo code from professor Steinburg
+    //if it doesnt work its his fault
     public void insert(T nameInput, U officeInput) {
         Node newKidOnTheBlock = new Node(nameInput, officeInput, null, null, null, 0);
         Node posRoot = this.root;
@@ -30,6 +36,8 @@ public class AddressBookTree<T extends Comparable, U> {
         newKidOnTheBlock.setColor(1);
         insert_fix(newKidOnTheBlock);
     }
+    //fixing the insert, also from professor Steinburg's pseudo code
+    //again, his fault if it doesnt work
     public void insert_fix(Node node){
         while(node.getParent().getColor() == 1){
             if((node.getParent().getName().compareTo(node.getParent().getParent().getLeftkid().getName()))== 0){
@@ -68,6 +76,9 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         this.root.setColor(0);
     }
+    //delete method also from the pseudocode
+    //rn this isnt finished bc the pseudocode doesnt make sense
+    //have to ask about this
     public void delete(T nameInput){
         Node z = this.root;
         while(z.getName().compareTo(nameInput) != 0 && z != null){
@@ -92,6 +103,8 @@ public class AddressBookTree<T extends Comparable, U> {
 
         }
     }
+    //fixing eh delete so its still a red/black tree
+    //again pseudocode
     public void delete_fix(Node<T,U> x){
         Node w = null;
         while(x != this.root && x.getColor() == 0){
@@ -145,6 +158,8 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         x.setColor(0);
     }
+    //left rotation of the tree
+    //again pseudocode
     public void rotationLeft(Node<T,U> x){
         Node y = x;
         x.setRightkid(y.getLeftkid());
@@ -162,6 +177,9 @@ public class AddressBookTree<T extends Comparable, U> {
         y.setLeftkid(x);
         x.setParent(y);
     }
+    //right rotation of the tree
+    //this is what I think is the correct mirror of the
+    //pseudocode provided by professor Steinburg
     public void rotationRight(Node<T,U> x){
         Node y = x;
         x.setLeftkid(y.getRightkid());
@@ -179,6 +197,7 @@ public class AddressBookTree<T extends Comparable, U> {
         y.setRightkid(x);
         x.setParent(y);
     }
+    //transplant method, this is to assist deletes
     public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
         if(nodeOne == null){
             this.root = nodeTwo;
@@ -189,6 +208,7 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         nodeTwo.setParent(nodeOne.getParent());
     }
+    //prints tree out in traversal order
     public void display(){
 
     }
@@ -257,6 +277,7 @@ class Node<T extends Comparable, U> {
     private Node rightkid;
     private int color;
     //constructors
+    //default
     public Node(){
         name = null;
         office = null;
@@ -265,6 +286,7 @@ class Node<T extends Comparable, U> {
         rightkid = null;
         color = 0;
     }
+    //with variables
     public Node(T nameInput, U officeInput, Node parentInput, Node leftkidInput, Node rightkidInput, int colorInput){
         name = nameInput;
         office = officeInput;
