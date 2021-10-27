@@ -77,8 +77,7 @@ public class AddressBookTree<T extends Comparable, U> {
         this.root.setColor(0);
     }
     //delete method also from the pseudocode
-    //rn this isnt finished bc the pseudocode doesnt make sense
-    //have to ask about this
+    //I think I understand the pseudocode, I could be very wrong
     public void delete(T nameInput){
         Node z = this.root;
         while(z.getName().compareTo(nameInput) != 0 && z != null){
@@ -98,10 +97,32 @@ public class AddressBookTree<T extends Comparable, U> {
             x = z.getLeftkid();
             rb_transplant(z, z.getLeftkid());
         }else{
-            while(y.getRightkid() != null)
+            y = minTree(z.getRightkid());
             yOriginalColor = y.getColor();
-
+            x = y.getRightkid();
+            if(y.getParent().getName().compareTo(z.getName()) == 0){
+                x.setParent(y);
+            }else{
+                rb_transplant(x, y);
+                y.setRightkid(z.getRightkid());
+                y.getRightkid().setParent(y);
+            }
+            rb_transplant(x, y);
+            y.setLeftkid(z.getLeftkid());
+            y.getLeftkid().setParent(y);
+            y.setColor(0);
         }
+        if(yOriginalColor == 0){
+            delete_fix(x);
+        }
+    }
+    //this is the method I think is being called by the delete methdod
+    //It's recursive to find the minimum value in the tree
+    private Node minTree(Node<T, U> node){
+        if(node.getLeftkid() != null){
+            return minTree(node.getLeftkid());
+        }
+        return node;
     }
     //fixing eh delete so its still a red/black tree
     //again pseudocode
