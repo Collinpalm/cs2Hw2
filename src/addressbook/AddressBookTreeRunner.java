@@ -104,9 +104,11 @@ public class AddressBookTreeRunner {
             System.out.println("TEST 3 Passed!");
             ++pass;
         }
-        else
+        else {
             System.out.println("TEST 3 Failed!");
-        
+            System.out.println(test.countBlack(test.getRoot()));
+            System.out.println(test.countRed(test.getRoot()));
+        }
         System.out.println("Ending Test Cases...");
         System.out.println("*************************************************");
 

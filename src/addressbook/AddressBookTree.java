@@ -95,8 +95,8 @@ public class AddressBookTree<T extends Comparable, U> {
     //I think I understand the pseudocode, I could be very wrong
     public void deleteNode(T nameInput){
         Node z = this.root;
-        while(z.getName().compareTo(nameInput) != 0 && (z.getLeftkid() != null || z.getRightkid() != null)){
-            if(z.getName().compareTo(nameInput) > 0){
+        while(z != null && z.getName().compareTo(nameInput) != 0 && (z.getLeftkid() != null || z.getRightkid() != null)){
+            if(z.getRightkid() != null && z.getName().compareTo(nameInput) > 0){
                 z = z.getRightkid();
             }else{
                 z = z.getLeftkid();
@@ -104,31 +104,33 @@ public class AddressBookTree<T extends Comparable, U> {
         }
         Node y = z;
         Node x = null;
-        int yOriginalColor = y.getColor();
-        if(z.getLeftkid() == null){
-            x = z.getRightkid();
-            rb_transplant(z, z.getRightkid());
-        }else if(z.getRightkid() == null){
-            x = z.getLeftkid();
-            rb_transplant(z, z.getLeftkid());
-        }else{
-            y = minTree(z.getRightkid());
-            yOriginalColor = y.getColor();
-            x = y.getRightkid();
-            if(y.getParent().getName().compareTo(z.getName()) == 0){
-                x.setParent(y);
-            }else{
+        if(y != null) {
+            int yOriginalColor = y.getColor();
+            if (z.getRightkid() != null && z.getLeftkid() == null) {
+                x = z.getRightkid();
+                rb_transplant(z, z.getRightkid());
+            } else if (z.getRightkid() == null) {
+                x = z.getLeftkid();
+                rb_transplant(z, z.getLeftkid());
+            } else {
+                y = minTree(z.getRightkid());
+                yOriginalColor = y.getColor();
+                x = y.getRightkid();
+                if (y.getParent().getName().compareTo(z.getName()) == 0) {
+                    x.setParent(y);
+                } else {
+                    rb_transplant(x, y);
+                    y.setRightkid(z.getRightkid());
+                    y.getRightkid().setParent(y);
+                }
                 rb_transplant(x, y);
-                y.setRightkid(z.getRightkid());
-                y.getRightkid().setParent(y);
+                y.setLeftkid(z.getLeftkid());
+                y.getLeftkid().setParent(y);
+                y.setColor(0);
             }
-            rb_transplant(x, y);
-            y.setLeftkid(z.getLeftkid());
-            y.getLeftkid().setParent(y);
-            y.setColor(0);
-        }
-        if(yOriginalColor == 0){
-            delete_fix(x);
+            if (x != null && yOriginalColor == 0) {
+                delete_fix(x);
+            }
         }
     }
     //this is the method I think is being called by the delete methdod
@@ -141,9 +143,9 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     //fixing eh delete so its still a red/black tree
     //again pseudocode
-    public void delete_fix(Node<T,U> x){
+    public void delete_fix(@NotNull Node<T,U> x){
         Node w = null;
-        while(x.getName().compareTo((T)this.root.getName())==0 && x.getColor() == 0){
+        while(x != null && x.getName().compareTo((T)this.root.getName())==0 && x.getColor() == 0){
             if(x.getName().compareTo((T)x.getParent().getLeftkid().getName()) == 0){
                 w = x.getParent().getRightkid();
                 if(w.getColor() == 1){
@@ -238,7 +240,10 @@ public class AddressBookTree<T extends Comparable, U> {
         x.setParent(y);
     }
     //transplant method, this is to assist deletes
-    public void rb_transplant(Node<T,U> u, Node<T,U> v){
+    public void rb_transplant( Node<T,U> u, Node<T,U> v){
+        if(v == null || u == null){
+            return;
+        }
         if(u == null){
             this.root = v;
         }else if(u.getName().compareTo(u.getParent().getLeftkid().getName()) == 0){
