@@ -48,9 +48,11 @@ public class AddressBookTreeRunner {
             System.out.println("TEST 1 Passed!");
             ++pass;
         }
-        else
+        else {
             System.out.println("TEST 1 Failed!");
-        
+            System.out.println(test.countBlack(test.getRoot()));
+            System.out.println(test.countRed(test.getRoot()));
+        }
         System.out.println("*************************************************");
         System.out.println("Test Case 2...");
         System.out.println("Testing the insert method...");
@@ -62,6 +64,7 @@ public class AddressBookTreeRunner {
         test.insert("Minerva McGonagall", "HEC-108C");
         test.insert("Rubeus Hagrid", "HEC-108E");
 
+        test.display();
         if(test.countBlack(test.getRoot()) == 31 && test.countRed(test.getRoot()) == 29)
         {
             System.out.println("TEST 2 Passed!");

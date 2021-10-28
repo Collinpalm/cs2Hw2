@@ -1,10 +1,14 @@
 package addressbook;
 
+import org.jetbrains.annotations.NotNull;
+
 public class AddressBookTree<T extends Comparable, U> {
     //saves the root of the tree
     //cannot be accessed directly to avoid
     //idiots trying to do something stupid
     private Node root;
+    public int black = 0;
+    public int red = 0;
     //constructor that creates a null node as the root
     public AddressBookTree(){root = new Node();}
     public Node getRoot(){
@@ -33,20 +37,26 @@ public class AddressBookTree<T extends Comparable, U> {
         } else {
             y.setRightkid(z);
         }
+        if(z.getParent() == null){
+            z.setColor(0);
+            return;
+        }
+        if(z.getParent().getParent() == null){
+            return;
+        }
         insert_fix(z);
-
 
     }
     //fixing the insert, also from professor Steinburg's pseudo code
     //again, his fault if it doesnt work
-    public void insert_fix(Node z){
+    public void insert_fix(@NotNull Node z){
         if(z.getParent() == null || z.getParent().getParent() == null || z.getParent().getParent().getLeftkid() == null || z.getParent().getParent().getRightkid() == null){
             return;
         }
        while(z.getParent() != null && z.getParent().getColor() == 1){
            if(z.getParent().getParent() != null && z.getParent().getParent().getLeftkid() != null && z.getParent().getName().compareTo(z.getParent().getParent().getLeftkid().getName()) ==0){
                Node y = z.getParent().getParent().getRightkid();
-               if(y.getColor() == 1){
+               if(y != null && y.getColor() == 1){
                    z.getParent().setColor(0);
                    y.setColor(0);
                    z.getParent().getParent().setColor(1);
@@ -78,7 +88,8 @@ public class AddressBookTree<T extends Comparable, U> {
                }
            }
        }
-       this.root.setColor(0);
+        this.root.setColor(0);
+
     }
     //delete method also from the pseudocode
     //I think I understand the pseudocode, I could be very wrong
@@ -185,7 +196,7 @@ public class AddressBookTree<T extends Comparable, U> {
     }
     //left rotation of the tree
     //again pseudocode
-    public void rotationLeft(Node<T,U> x){
+    public void rotationLeft(@NotNull Node<T,U> x){
         Node y = x.getRightkid();
         x.setRightkid(y.getLeftkid());
         if(y.getLeftkid() != null){
@@ -194,10 +205,12 @@ public class AddressBookTree<T extends Comparable, U> {
         y.setParent(x.getParent());
         if(x.getParent() == null){
             this.root = y;
-        }else if(x.getParent().getLeftkid() != null && x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
-            x.getParent().setLeftkid(y);
         }else{
-            x.getParent().setRightkid(y);
+            if(x.getParent().getLeftkid() != null &&x.getName().compareTo(x.getParent().getLeftkid().getName()) == 0){
+                x.getParent().setLeftkid(y);
+            }else{
+                x.getParent().setRightkid(y);
+            }
         }
         y.setLeftkid(x);
         x.setParent(y);
@@ -208,30 +221,32 @@ public class AddressBookTree<T extends Comparable, U> {
     public void rotationRight(Node<T,U> x){
         Node y = x.getLeftkid();
         x.setLeftkid(y.getRightkid());
-        if(y.getRightkid() == null){
+        if(y.getRightkid() != null){
             y.getRightkid().setParent(x);
         }
         y.setParent(x.getParent());
         if(x.getParent() == null){
             this.root = y;
-        }else if(x.getName().compareTo((T)x.getParent().getRightkid().getName()) == 0){
-            x.getParent().setRightkid(y);
         }else{
-            x.getParent().setLeftkid(y);
+            if(x.getParent().getRightkid() != null && x.getName().compareTo(x.getParent().getRightkid().getName()) == 0){
+                x.getParent().setRightkid(y);
+             }else{
+                x.getParent().setLeftkid(y);
+            }
         }
         y.setRightkid(x);
         x.setParent(y);
     }
     //transplant method, this is to assist deletes
-    public void rb_transplant(Node<T,U> nodeOne, Node<T,U> nodeTwo){
-        if(nodeOne == null){
-            this.root = nodeTwo;
-        }else if(nodeOne.getName().compareTo((T)nodeOne.getParent().getLeftkid().getName()) == 0){
-            nodeOne.getParent().setLeftkid(nodeTwo);
+    public void rb_transplant(Node<T,U> u, Node<T,U> v){
+        if(u == null){
+            this.root = v;
+        }else if(u.getName().compareTo(u.getParent().getLeftkid().getName()) == 0){
+            u.getParent().setLeftkid(v);
         }else{
-            nodeOne.getParent().setRightkid(nodeTwo);
+            u.getParent().setRightkid(v);
         }
-        nodeTwo.setParent(nodeOne.getParent());
+        v.setParent(u.getParent());
     }
     //calls the recusive function bc thats better
     public void display(){displayRecurse(this.root);}
@@ -241,37 +256,31 @@ public class AddressBookTree<T extends Comparable, U> {
             return;
         }
         displayRecurse(root.getLeftkid());
-        System.out.println(root.getName() + " - " + root.getOffice());
+        System.out.println(root.getName() + " - " + root.getOffice() + " - " + root.getColor());
         displayRecurse(root.getRightkid());
     }
     //recursively travers the tree and count the black nodes
     public int countBlack(Node<T,U> selectedRoot){
-        if(selectedRoot != null && selectedRoot.getLeftkid() != null && selectedRoot.getLeftkid() != null){
-            if(selectedRoot.getColor() == 0){
-                return countBlack(selectedRoot.getLeftkid()) + countBlack(selectedRoot.getRightkid()) +1;
-            }
-            return countBlack(selectedRoot.getLeftkid()) + countBlack(selectedRoot.getRightkid());
-        }else if(selectedRoot != null && selectedRoot.getLeftkid() != null && selectedRoot.getLeftkid() != null) {
-            if (selectedRoot.getColor() == 0) {
-                return 1;
-            }
-            return 0;
-        }else if(selectedRoot != null && selectedRoot.getLeftkid() != null){
-            if (selectedRoot.getColor() == 0){
-                return countBlack(selectedRoot.getLeftkid()) + 1;
-            }
-            return countBlack(selectedRoot.getLeftkid());
-        }else if(selectedRoot != null){
-            if (selectedRoot.getColor() == 0) {
-                return countBlack(selectedRoot.getRightkid()) + 1;
-            }
-            return countBlack(selectedRoot.getRightkid());
-        }
-        return 0;
+        return countNodes(selectedRoot) - countRed(selectedRoot);
     }
     //subtract the number of black nodes from the total number of nodes
     public int countRed(Node<T,U> selectedRoot){
-        return countNodes(selectedRoot) - countBlack(selectedRoot);
+        if(selectedRoot.getLeftkid() == null && selectedRoot.getRightkid() == null){
+            if(selectedRoot.getColor() == 1)
+                return 1;
+            return 0;
+        }else if(selectedRoot.getLeftkid() != null && selectedRoot.getRightkid() != null){
+            if(selectedRoot.getColor() == 1)
+                return countRed(selectedRoot.getLeftkid()) + countRed(selectedRoot.getRightkid()) +1;
+            return countRed(selectedRoot.getLeftkid()) + countRed(selectedRoot.getRightkid());
+        }else if(selectedRoot.getLeftkid() != null){
+            if(selectedRoot.getColor() == 1)
+                return  countRed(selectedRoot.getLeftkid()) + 1;
+            return  countRed(selectedRoot.getLeftkid());
+        }
+        if(selectedRoot.getColor() == 1)
+            return countRed(selectedRoot.getRightkid())+1;
+        return countRed(selectedRoot.getRightkid());
     }
     //recursively count the number of nodes
     public int countNodes(Node selectedRoot){
