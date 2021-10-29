@@ -1,3 +1,25 @@
+/*
+Collin Palm
+COP3503C Fall 2021
+Programming assignment 2
+
+This doesnt work,
+I know it will not pass the test cases.
+It got to hour 25 of working on this project for me to just say
+Ive earned enough points and my grade can reasonably take the hit.
+This was a rediculus assignment.  The use of generics makes no sense
+to me, probably because I'm stupid, but I could have much more easily
+done this assignment if we were just allowed to say we were accepting
+strings.  Also I implimented the pseudocode from the slides almost one
+for one and I just cant look at this assignment anymore.
+
+ */
+
+
+
+
+
+
 package addressbook;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +37,6 @@ public class AddressBookTree<T extends Comparable, U> {
         return this.root;
     }
     //insert method from the pseudo code from professor Steinburg
-    //if it doesnt work its his fault
     public void insert(T nameInput, U officeInput) {
         Node z = new Node(nameInput, officeInput, null, null, null, 1);
         Node x = this.root;
@@ -48,7 +69,6 @@ public class AddressBookTree<T extends Comparable, U> {
 
     }
     //fixing the insert, also from professor Steinburg's pseudo code
-    //again, his fault if it doesnt work
     public void insert_fix(@NotNull Node z){
         if(z.getParent() == null || z.getParent().getParent() == null || z.getParent().getParent().getLeftkid() == null || z.getParent().getParent().getRightkid() == null){
             return;
